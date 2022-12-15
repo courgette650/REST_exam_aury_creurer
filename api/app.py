@@ -204,7 +204,7 @@ def delete_utilisateur(utilisateur_id):
 @app.route('/utilisateurs/<string:utilisateur_id>/reservations')
 def get_utilisateur_reservations(utilisateur_id):
     """Crée les utilisateurs"""
-    reservations = execute_query("select * from utilisateurs where id = ?", (utilisateur_id, ))
+    reservations = execute_query("select g.nom_groupe, c.date_concert, c.places_max from utilisateurs u, reservations r, concerts c, groupes g where u.id = ? and r.utilisateur_id = u.id and c.id = r.concert_id and g.id = c.groupe_id", (utilisateur_id, ))
     
     if(len(reservations) < 1):
         return jsonify({}), 204
@@ -212,6 +212,10 @@ def get_utilisateur_reservations(utilisateur_id):
     id = execute_query("delete from utilisateurs where id = ?", (utilisateur_id, ))
 
     return jsonify({"id": id}), 200
+
+
+
+
 if __name__ == '__main__':
     # define the localhost ip and the port that is going to be used
     app.run(host='0.0.0.0', port=5000)
