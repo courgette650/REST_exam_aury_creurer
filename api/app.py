@@ -81,6 +81,7 @@ def get_groupes():
 def post_groupe():
     """"Crée un groupes"""
     nom_groupe = request.args.get('nom_groupe')
+    nom_groupe = urllib.parse.unquote(nom_groupe)
     groupe = execute_query("select * from groupes where nom_groupe = ?", (nom_groupe, ))
     
     if(nom_groupe is None or len(groupe) > 0):
@@ -94,6 +95,7 @@ def post_groupe():
 @app.route('/groupes/<string:nom_groupe>', methods=['DELETE', ])
 def delete_groupe(nom_groupe):
     """"Supprime un groupe"""
+    nom_groupe = urllib.parse.unquote(nom_groupe)
     groupe = execute_query("select * from groupes where nom_groupe = ?", (nom_groupe, ))
     
     if(len(groupe) < 1):
@@ -106,6 +108,7 @@ def delete_groupe(nom_groupe):
 @app.route('/groupes/<string:nom_groupe>')
 def get_groupe(nom_groupe):
     """"Récupère les infos d'un groupe"""
+    nom_groupe = urllib.parse.unquote(nom_groupe)
     groupe = execute_query("select * from groupes where nom_groupe = ?", (nom_groupe, ))
     if(len(groupe) < 1):
         abort(404)
@@ -123,6 +126,7 @@ def get_groupe(nom_groupe):
 @app.route('/groupes/<string:nom_groupe>/concerts')
 def get_groupe_concerts(nom_groupe):
     """"Récupère les concerts d'un groupe"""
+    nom_groupe = urllib.parse.unquote(nom_groupe)
     concerts = execute_query("select c.* from groupes g, concerts c where nom_groupe = ? and c.groupe_id = g.id", (nom_groupe, ))
     if(len(concerts) < 1):
         return jsonify({}), 204
@@ -203,7 +207,7 @@ def delete_utilisateur(utilisateur_id):
 
 @app.route('/utilisateurs/<string:utilisateur_id>/reservations')
 def get_utilisateur_reservations(utilisateur_id):
-    """Crée les utilisateurs"""
+    """Récupère les réservations d'un utilisateur"""
     reservations = execute_query("select g.nom_groupe, c.date_concert, c.places_max from utilisateurs u, reservations r, concerts c, groupes g where u.id = ? and r.utilisateur_id = u.id and c.id = r.concert_id and g.id = c.groupe_id", (utilisateur_id, ))
     
     if(len(reservations) < 1):
@@ -213,6 +217,21 @@ def get_utilisateur_reservations(utilisateur_id):
 
     return jsonify({"id": id}), 200
 
+
+""" ################# Concerts #################
+    #############################################"""
+    
+    
+@app.route('/concerts')
+def get_utilisateur_reservations():
+    """Récupère les concerts"""
+    concerts = execute_query("select * from concerts")
+    
+    if(len(concerts) < 1):
+        return jsonify({}), 204
+        
+
+    return jsonify(concerts), 200
 
 
 
