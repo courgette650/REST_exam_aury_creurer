@@ -99,7 +99,7 @@ def delete_groupe(nom_groupe):
     if(len(groupe) < 1):
         abort(204)
         
-    execute_query("insert into groupes(nom_groupe) values (?)", (groupe[0]["id"],))
+    execute_query("delete from groupes where id = ?", (groupe[0]["id"],))
     
     return jsonify(groupe), 200
 
@@ -157,12 +157,12 @@ def get_utilisateurs():
     return jsonify(utilisateurs), 200
 
 
-@app.route('/utilisateurs', methods = ['POST'])
+@app.route('/utilisateurs/<string:utilsateur_id>')
 def get_utilisateur(utilisateur_id):
-    """Crée les utilisateurs"""
+    """Récupère un utilisateur"""
     utilisateur = execute_query("select * from utilisateurs where id = ?", (utilisateur_id, ))
-    if(len(utilisateur) > 0):
-        abort(409)
+    if(len(utilisateur) < 1):
+        abort(404)
     # ajout de _links aux concerts
     utilisateur[0]["_links"] = [{
             "href": "/utilisateurs/" + urllib.parse.quote(utilisateur[0]["id"]),
@@ -174,19 +174,18 @@ def get_utilisateur(utilisateur_id):
         
     return jsonify(utilisateur), 200
 
-@app.route('/utilisateurs/<string:utilisateur_id>')
-def post_utilisateur(utilisateur_id):
-    """Récupère un utilisateur"""
-    utilisateur = execute_query("select * from utilisateurs where id = ?", (utilisateur_id, ))
-    if(len(utilisateur) < 1):
-        abort(404)
-    # ajout de _links aux concerts
-    utilisateur[0]["_links"] = [{
-            "href": "/utilisateurs/" + urllib.parse.quote(utilisateur[0]["id"]) + "/reservations",
-            "rel": "reservations"
-        }]
+@app.route('/utilisateurs/', methods=['POST'])
+def post_utilisateur():
+    """Crée les utilisateurs"""
+    nom_utilisateur = request.args.get('nom_utilisateur')
+    utilisateur = execute_query("select * from utilisateurs where nom = ?", (nom_utilisateur, ))
+    
+    if(len(utilisateur) > 0):
+        abort(409)
         
-    return jsonify(utilisateur), 200
+    id = execute_query("insert into utilisateurs(nom_utilisateur) values (?)", (nom_utilisateur, ))
+
+    return jsonify({"id": id}), 200
 
 if __name__ == '__main__':
     # define the localhost ip and the port that is going to be used

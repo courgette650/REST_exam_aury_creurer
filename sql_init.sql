@@ -1,17 +1,17 @@
 CREATE OR REPLACE TABLE groupes (
     id int(11) AUTO_INCREMENT PRIMARY KEY,
-    nom_groupe VARCHAR(25) UNIQUE   
+    nom_groupe VARCHAR(25) UNIQUE NOT NULL   
 ) ;
 
 CREATE OR REPLACE TABLE utilisateurs (
     id int(11) AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(255)   
+    nom VARCHAR(255)  NOT NULL  
 ) ;
 
 CREATE OR REPLACE TABLE concerts (
     id int(11) AUTO_INCREMENT PRIMARY KEY,
     groupe_id int(11),
-    date_concert VARCHAR(10),
+    date_concert VARCHAR(10) NOT NULL,
     places_max int(11),
     FOREIGN KEY (groupe_id) REFERENCES groupes (id)
 ) ;
