@@ -64,7 +64,7 @@ def get_groupes():
     """"Récupère les groupes"""
     groupes = execute_query("select * from groupes")
     if(len(groupes) < 1):
-        abort(204)
+        jsonify({}), 204
         
     # ajout de _links aux groupes
     for i in range(0, len(groupes)):
