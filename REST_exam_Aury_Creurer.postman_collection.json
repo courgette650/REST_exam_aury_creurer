@@ -1,0 +1,611 @@
+{
+	"info": {
+		"_postman_id": "6d5d2669-ad03-40c4-a204-a4966816d854",
+		"name": "REST_exam_Aury_Creurer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18301811"
+	},
+	"item": [
+		{
+			"name": "Concerts",
+			"item": [
+				{
+					"name": "Ajouter un concert",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"",
+									"pm.test(\"Return id_concert\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"id_concert\");",
+									"});",
+									"var jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"id_concert\", jsonData[\"id_concert\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/concerts?date&nom_groupe&place_max",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"concerts"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": null
+								},
+								{
+									"key": "nom_groupe",
+									"value": null
+								},
+								{
+									"key": "place_max",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter un concert FAILED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Failed POST request\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/concerts?date&nom_groupe",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"concerts"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": null
+								},
+								{
+									"key": "nom_groupe",
+									"value": null
+								},
+								{
+									"key": "place_max",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un concert",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"id_concert\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/concerts?id_concert={{id_concert}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"concerts"
+							],
+							"query": [
+								{
+									"key": "id_concert",
+									"value": "{{id_concert}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un concert FAILED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/concerts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"concerts"
+							],
+							"query": [
+								{
+									"key": "id_concert",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Visualiser un concert",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Ressource fournie\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"date\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/concerts/{{id_concert}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"concerts",
+								"{{id_concert}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Visualiser un concert FAILED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/concerts/9999999",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"concerts",
+								"9999999"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Groupes",
+			"item": [
+				{
+					"name": "Ajouter un groupe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"",
+									"pm.test(\"Return id_group\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"id\");",
+									"});",
+									"pm.collectionVariables.set(\"id_groupe\", \"POSTMANNERS\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/groupes?nom_groupe=POSTMANNERS",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"groupes"
+							],
+							"query": [
+								{
+									"key": "nom_groupe",
+									"value": "POSTMANNERS"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter un groupe FAILED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Failed POST request\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/groupes",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"groupes"
+							],
+							"query": [
+								{
+									"key": "nom_groupe",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un groupe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"nom_groupe\");",
+									"});",
+									"",
+									"pm.collectionVariables.unset(\"id_concert\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/groupes/{{id_groupe}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"groupes",
+								"{{id_groupe}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un groupe FAILED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/groupes/999",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"groupes",
+								"999"
+							],
+							"query": [
+								{
+									"key": "id_concert",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Visualiser un groupe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Ressource fournie\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"nom_groupe\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/groupes/{{id_groupe}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"groupes",
+								"{{id_groupe}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Visualiser un groupe FAILED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/groupes/9999999",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"groupes",
+								"9999999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Visualiser les concerts d'un groupes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/groupes/{{id_groupe}}/concerts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"groupes",
+								"{{id_groupe}}",
+								"concerts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Visualiser les concerts d'un groupes avec concerts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+									"",
+									"});",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"date_concert\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/groupes/THE ROCKEURS/concerts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"groupes",
+								"THE ROCKEURS",
+								"concerts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Visualiser les concerts d'un groupes FAILED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/groupes/999999999/concerts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"groupes",
+								"999999999",
+								"concerts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "id_groupe",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
