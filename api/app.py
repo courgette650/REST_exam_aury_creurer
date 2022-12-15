@@ -83,24 +83,23 @@ def post_groupe():
     nom_groupe = request.args.get('nom_groupe')
     groupe = execute_query("select * from groupes where nom_groupe = ?", (nom_groupe, ))
     
-    if(len(nom_groupe) < 1 or len(groupe) > 0):
+    if(len(groupe) > 0):
         abort(409)
         
-    id = execute_query("insert into groupes(nom_groupe) values (?)", (id,))
+    id = execute_query("insert into groupes(nom_groupe) values (?)", (nom_groupe,))
     
     return jsonify({"id" : id}), 201
 
 
-@app.route('/groupes', methods=['DELETE', ])
-def delete_groupe():
+@app.route('/groupes/<string:nom_groupe>', methods=['DELETE', ])
+def delete_groupe(nom_groupe):
     """"Supprime un groupe"""
-    nom_groupe = request.args.get('nom_groupe')
     groupe = execute_query("select * from groupes where nom_groupe = ?", (nom_groupe, ))
     
-    if(len(nom_groupe) < 1 or len(groupe) < 1):
+    if(len(groupe) < 1):
         abort(204)
         
-    execute_query("insert into groupes(nom_groupe) values (?)", (id,))
+    execute_query("insert into groupes(nom_groupe) values (?)", (groupe[0]["id"],))
     
     return jsonify(groupe), 200
 
@@ -139,7 +138,55 @@ def get_groupe_concerts(nom_groupe):
 """ ################# Utilisateurs #################
     #############################################"""
 
-# @app.route('/utilisateurs')
+@app.route('/utilisateurs')
+def get_utilisateurs():
+    """Récupère les utilisateurs"""
+    utilisateurs = execute_query("select * from utilisateurs")
+    if(len(utilisateurs) < 1):
+        abort(204)
+    # ajout de _links aux concerts
+    for i in range(0, len(utilisateurs)):
+        utilisateurs[i]["_links"] = [{
+                "href": "/utilisateurs/" + urllib.parse.quote(utilisateurs[i]["id"]),
+                "rel": "self"
+            }, {
+                "href": "/utilisateurs/" + urllib.parse.quote(utilisateurs[i]["id"]) + "/reservations",
+                "rel": "reservations"
+            }]
+        
+    return jsonify(utilisateurs), 200
+
+
+@app.route('/utilisateurs', methods = ['POST'])
+def get_utilisateur(utilisateur_id):
+    """Crée les utilisateurs"""
+    utilisateur = execute_query("select * from utilisateurs where id = ?", (utilisateur_id, ))
+    if(len(utilisateur) > 0):
+        abort(409)
+    # ajout de _links aux concerts
+    utilisateur[0]["_links"] = [{
+            "href": "/utilisateurs/" + urllib.parse.quote(utilisateur[0]["id"]),
+            "rel": "self"
+        }, {
+            "href": "/utilisateurs/" + urllib.parse.quote(utilisateur[0]["id"]) + "/reservations",
+            "rel": "reservations"
+        }]
+        
+    return jsonify(utilisateur), 200
+
+@app.route('/utilisateurs/<string:utilisateur_id>')
+def post_utilisateur(utilisateur_id):
+    """Récupère un utilisateur"""
+    utilisateur = execute_query("select * from utilisateurs where id = ?", (utilisateur_id, ))
+    if(len(utilisateur) < 1):
+        abort(404)
+    # ajout de _links aux concerts
+    utilisateur[0]["_links"] = [{
+            "href": "/utilisateurs/" + urllib.parse.quote(utilisateur[0]["id"]) + "/reservations",
+            "rel": "reservations"
+        }]
+        
+    return jsonify(utilisateur), 200
 
 if __name__ == '__main__':
     # define the localhost ip and the port that is going to be used
