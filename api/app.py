@@ -88,7 +88,7 @@ def post_groupe():
         
     id = execute_query("insert into groupes(nom_groupe) values (?)", (id,))
     
-    return jsonify(id), 201
+    return jsonify({"id" : id}), 201
 
 
 @app.route('/groupes', methods=['DELETE', ])
@@ -139,6 +139,7 @@ def get_groupe_concerts(nom_groupe):
 """ ################# Utilisateurs #################
     #############################################"""
 
+# @app.route('/utilisateurs')
 
 if __name__ == '__main__':
     # define the localhost ip and the port that is going to be used
