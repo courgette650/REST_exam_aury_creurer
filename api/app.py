@@ -97,7 +97,7 @@ def delete_groupe(nom_groupe):
     groupe = execute_query("select * from groupes where nom_groupe = ?", (nom_groupe, ))
     
     if(len(groupe) < 1):
-        abort(204)
+        jsonify({}), 204
         
     execute_query("delete from groupes where id = ?", (groupe[0]["id"],))
     
@@ -125,7 +125,7 @@ def get_groupe_concerts(nom_groupe):
     """"Récupère les concerts d'un groupe"""
     concerts = execute_query("select c.* from groupes g, concerts c where nom_groupe = ? and c.groupe_id = g.id", (nom_groupe, ))
     if(len(concerts) < 1):
-        abort(204)
+        jsonify({}), 204
     # ajout de _links aux concerts
     for i in range(0, len(concerts)):
         concerts[i]["_links"] = [{
@@ -143,7 +143,7 @@ def get_utilisateurs():
     """Récupère les utilisateurs"""
     utilisateurs = execute_query("select * from utilisateurs")
     if(len(utilisateurs) < 1):
-        abort(204)
+        jsonify({}), 204
     # ajout de _links aux concerts
     for i in range(0, len(utilisateurs)):
         utilisateurs[i]["_links"] = [{
@@ -184,6 +184,19 @@ def post_utilisateur():
         abort(409)
         
     id = execute_query("insert into utilisateurs(nom_utilisateur) values (?)", (nom_utilisateur, ))
+
+    return jsonify({"id": id}), 200
+
+
+@app.route('/utilisateurs/<string:utilisateur_id>', methods=['DELETE'])
+def delete_utilisateur(utilisateur_id):
+    """Crée les utilisateurs"""
+    utilisateur = execute_query("select * from utilisateurs where id = ?", (utilisateur_id, ))
+    
+    if(len(utilisateur) < 1):
+        jsonify({}), 204
+        
+    id = execute_query("delete from utilisateurs where id = ?", (utilisateur_id, ))
 
     return jsonify({"id": id}), 200
 
